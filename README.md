@@ -37,7 +37,7 @@ To install, run `npm install` or `yarn install`.
 
 To build the UI to view the streams, run `npm run build` or `yarn run build`. The ui uses [video.js](https://videojs.com/) as the video player.
 
-To start the server, run `./run_server.sh`. There are multiple environment variables to set the port, ui file location, and data directory for HLS streams.
+To start the server, run `NODE_ENV=production node server.js`. There are multiple environment variables to set the port, ui file location, and data directory for HLS streams.
 
 To view an HLS stream, use the `stream` query param with the `stream_name` used during the trancoding process. To view the rick roll video, go to `http://localhost:8080/?stream=rick`
 

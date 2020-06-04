@@ -11,9 +11,10 @@ RUN yarn run build
 
 
 # Run Server
+ENV NODE_ENV=production
 ENV PORT=8080
 ENV DATA_DIRECTORY=/data
 
 
 EXPOSE ${PORT}
-CMD [ "sh", "run_server.sh"] 
+CMD [ "node", "server.js"] 
