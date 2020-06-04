@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import videojs from 'video.js';
-import { UrlService } from '../url.service';
+import { DataService } from '../data.service';
 
 
 @Component({
@@ -9,44 +9,38 @@ import { UrlService } from '../url.service';
   styleUrls: ['./video-player.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class VideoPlayerComponent implements OnInit {
-
-  url: string = null;
+export class VideoPlayerComponent implements OnInit, OnDestroy {
 
   @ViewChild('target', { static: true }) target: ElementRef;
-  // see options: https://github.com/videojs/video.js/blob/mastertutorial-options.html
-  options: {};
-  player: videojs.Player;
-  subs: any[] = [];
+
+  private player: videojs.Player;
+  private subs: any[] = [];
 
   constructor(
     private elementRef: ElementRef,
-    private urlService: UrlService,
+    private _data$: DataService,
   ) { }
 
   ngOnInit() {
     // instantiate Video.js
     this.subs.push(
-      this.urlService.data$.subscribe(url => {
-        this.options = {
+      this._data$.data$.subscribe(data => {
+        const options = {
           autoplay: true, controls: true, sources: {
-            src: url
+            src: data.src
           }
         }
-        // console.log(this.options)
-        this.makePlayer()
+
+        this.player = videojs(this.target.nativeElement, options);
+        if (data.time) {
+          this.player.currentTime(data.time)
+        }
+        this.player.play()
+
       })
     )
   }
 
-  makePlayer() {
-    if (this.player) {
-      this.player.dispose();
-    }
-    this.player = videojs(this.target.nativeElement, this.options, function onPlayerReady() {
-      console.log("Video loading..");
-    });
-  }
 
   ngOnDestroy() {
     // destroy player

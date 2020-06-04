@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UrlService } from './url.service';
-import { element } from 'protractor';
+import { DataService } from './data.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -16,21 +15,20 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private urlService: UrlService,
+    private _data$: DataService,
     private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
-    // instantiate Video.js
     this.subs.push(
-      this.route.queryParams.subscribe(param => {
-        const url = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + "/stream/" + param['stream'] + "/index.m3u8";
-        // const url = `${location.protocol}://location.hostname:8080/stream/${param['stream']}/index.m3u8`
-        this.urlService.newVideo(url)
+      this.route.queryParams.subscribe(params => {
+        const url: string = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + "/stream/" + params['stream'] + "/index.m3u8";
+        const time: number = params["time"] || null
+        this._data$.newVideo(url, time)
       })
     )
     this.subs.push(
-      this.urlService.data$.subscribe((data) => this.currentUrl = data)
+      this._data$.data$.subscribe((data) => this.currentUrl = data.src)
     )
   }
 
