@@ -45,6 +45,7 @@ To view an HLS stream at a specific time (units in seconds), use the `time` quer
 
 The HLS stream for `http://localhost:8080/?stream=rick` is found on the page.
 
+One can also install this via docker. Make sure to mount the data volume where the server expects data. Example of running the docker container: `docker run --rm -d  -p 8080:8080/tcp --volume "${PWD}"/data/output:/data  hlsstreamer:latest`.
 
 ## Example
 
