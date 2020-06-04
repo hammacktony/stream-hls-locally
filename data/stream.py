@@ -10,8 +10,9 @@ from ffmpeg_streaming import Formats
 
 logging.basicConfig(filename="streaming.log", level=logging.NOTSET, format="[%(asctime)s] %(levelname)s: %(message)s")
 
-HLS_EXTENSION = "m3u8"
-START_TIME = None
+HLS_EXTENSION: str = "m3u8"
+START_TIME: float = 0
+LIVE: bool = False
 
 
 def time_left(time_: float, total: float) -> str:
@@ -29,15 +30,20 @@ def monitor(ffmpeg, duration, time_):
     # You can update a field in your database or log it to a file
     # You can also create a socket connection and show a progress bar to users
     # logging.info(ffmpeg)
-    per = round(time_ / duration * 100)
-    sys.stdout.write(
-        "\rTranscoding...(%s%%) %s [%s%s]" % (per, time_left(time_, duration), "#" * per, "-" * (100 - per))
-    )
-    sys.stdout.flush()
+    if not LIVE:
+        per = round(time_ / duration * 100)
+        sys.stdout.write(
+            "\rTranscoding...(%s%%) %s [%s%s]" % (per, time_left(time_, duration), "#" * per, "-" * (100 - per))
+        )
+        sys.stdout.flush()
 
 
 def main(input: str, stream_name: str = "test", output: str = "./output", key: str = "", url: str = ""):
     """ Pass in an input location, and ffmpeg will create the HLS stream for you """
+
+    if "/dev/video" in input:
+        global LIVE
+        LIVE = True
 
     output_path = Path(output) / stream_name / f"index.{HLS_EXTENSION}"
 
