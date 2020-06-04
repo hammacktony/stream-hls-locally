@@ -41,6 +41,8 @@ To start the server, run `./run_server.sh`. There are multiple environment varia
 
 To view an HLS stream, use the `stream` query param with the `stream_name` used during the trancoding process. To view the rick roll video, go to `http://localhost:8080/?stream=rick`
 
+To view an HLS stream at a specific time (units in seconds), use the `time` query param with the time you want to seek to in the video.
+
 The HLS stream for `http://localhost:8080/?stream=rick` is found on the page.
 
 
